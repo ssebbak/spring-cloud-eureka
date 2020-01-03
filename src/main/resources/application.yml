@@ -1,0 +1,67 @@
+server:
+  port: 8761
+
+# Spring config setting
+spring:
+  profiles: dev
+  application:
+    name: spring-cloud-eureka-server
+  # resources static true
+  resources:
+    add-mappings: true
+  # dispatcherException Handle 404 500 503 ...
+  mvc:
+    throw-exception-if-no-handler-found: true
+  # console colorful
+  main:
+    banner-mode: off
+  output:
+    ansi:
+      enabled: always
+
+# registry url
+eureka-server:
+  host: 127.0.0.1
+  port: ${server.port}
+
+# eureka configure
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    # renewal interval
+    lease-renewal-interval-in-seconds: 10
+    # health check
+    health-check-url-path: /actuator/health
+    # needed to trigger info and endpoint update after restart
+    metadata-map:
+      startup: ${random.int}
+    prefer-ip-address: false
+  client:
+    service-url:
+      defaultZone: http://${eureka-server.host}:${eureka-server.port}/eureka/
+    # eureka server로 부터 서비스 리스트 정보를 local에 caching 할지 여부를 지정.
+    fetch-registry: false
+    # nodes 동료가 없으므로 나혼자이다. 그러므로 false. stand alone. eureka server가 하나일때에만 false
+    register-with-eureka: false
+  server:
+    # heartbeat 임계값을 계산하여(default 60 * 1000) api 요청이 문제가 없는 경우가 있으므로 보존한다를 선택함
+    enable-self-preservation: true
+
+# spring boot actuator CORS filter GET, POST METHOD
+# https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
+# 2.6. CORS Support
+# 2.7.2. Custom Web Endpoints
+# HTTP method
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-headers: "*"
+        allowed-methods: GET,POST,DELETE
+        allowed-origins: "*"
+  # actuator end point
+  endpoint:
+    health:
+      show-details: always
