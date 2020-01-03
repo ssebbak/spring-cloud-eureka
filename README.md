@@ -1,7 +1,8 @@
 ###Spring cloud
--[x] Eureaka Server
--[] config Server
--[] Gateway Zuul
+
+- [x] Eureaka Server
+- [ ] config Server
+- [ ] Gateway Zuul
 .
 .
 .
